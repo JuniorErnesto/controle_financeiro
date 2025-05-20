@@ -1,0 +1,462 @@
+/* Estilos Globais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #333333; /* Cinza escuro (quase preto) para o fundo geral */
+    color: #f4f4f4; /* Branco suave para texto principal */
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    overflow: hidden;
+    padding: 0 20px;
+}
+
+/* Cabeçalho */
+header {
+    background: #222222; /* Preto para o cabeçalho */
+    color: #ffffff;
+    padding: 20px 0;
+    border-bottom: 3px solid #e67e22; /* Laranja */
+}
+
+header h1 {
+    margin: 0;
+    float: left;
+    font-size: 1.8em;
+}
+
+header nav {
+    float: right;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+header nav ul {
+    padding: 0;
+    margin: 0 20px 0 0;
+    list-style: none;
+}
+
+header nav ul li {
+    display: inline;
+    padding: 0 15px;
+}
+
+header nav ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1em;
+    transition: color 0.3s ease;
+}
+
+header nav ul li a:hover,
+header nav ul li a.active {
+    color: #e67e22; /* Laranja */
+}
+
+#usernameDisplay {
+    color: #ffffff;
+    margin-right: 15px;
+}
+
+#logoutButton {
+    background-color: #e67e22; /* Laranja */
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+#logoutButton:hover {
+    background-color: #d35400; /* Laranja mais escuro */
+}
+
+/* Conteúdo Principal */
+main {
+    padding: 20px 0;
+}
+
+section {
+    background: #444444; /* Cinza médio para seções */
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+section h2 {
+    color: #e67e22; /* Laranja */
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #555555; /* Cinza escuro para sublinhado */
+    padding-bottom: 10px;
+}
+
+/* Cards de Resumo */
+.summary-cards {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: #555555; /* Cinza escuro para cards */
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.card h3 {
+    margin-top: 0;
+    color: #e67e22; /* Laranja */
+}
+
+.card p {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #ffffff; /* Branco */
+    margin-bottom: 0;
+}
+
+.card.saldo p {
+    color: #2ecc71; /* Verde para saldo positivo */
+}
+
+.card.saldo.negativo p {
+    color: #e74c3c; /* Vermelho para saldo negativo */
+}
+
+/* Formulários */
+form .input-group {
+    margin-bottom: 15px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #cccccc; /* Cinza claro para labels */
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"],
+form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #666666; /* Cinza para bordas de input */
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #555555; /* Cinza escuro para inputs */
+    color: #ffffff; /* Branco para texto de input */
+    font-size: 1em;
+}
+
+form input:focus, form select:focus {
+    border-color: #e67e22; /* Laranja */
+    outline: none;
+}
+
+form button[type="submit"],
+form button {
+    background-color: #e67e22; /* Laranja */
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+form button:hover {
+    background-color: #d35400; /* Laranja mais escuro */
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-row .input-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Tabelas */
+.table-container {
+    overflow-x: auto;
+    background-color: #555555; /* Cinza escuro para fundo da tabela */
+    padding: 15px;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #666666; /* Cinza para linhas da tabela */
+    color: #f0f0f0; /* Cinza muito claro para texto da tabela */
+}
+
+table th {
+    background-color: #2c3e50; /* Azul escuro acinzentado para cabeçalho da tabela */
+    color: #ffffff; /* Branco */
+    font-weight: bold;
+}
+
+table tr:nth-child(even) td {
+    background-color: #4a4a4a; /* Cinza um pouco mais claro para linhas pares */
+}
+
+table tr:hover td {
+    background-color: #606060; /* Cinza mais claro no hover */
+}
+
+table button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 0.9em;
+}
+
+/* Filtros */
+.filters {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filters .input-group {
+    margin-bottom: 0;
+}
+
+/* Gráficos */
+.charts-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.chart-wrapper {
+    flex: 1;
+    min-width: 300px;
+    background: #555555; /* Cinza escuro para fundo do gráfico */
+    padding: 20px;
+    border-radius: 8px;
+    height: 400px; /* Altura fixa para evitar crescimento infinito */
+    max-height: 400px; /* Altura máxima para garantir consistência */
+    overflow: hidden; /* Prevenir overflow de conteúdo */
+}
+
+.chart-wrapper h3 {
+    text-align: center;
+    color: #e67e22; /* Laranja */
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.chart-wrapper canvas {
+    max-height: 350px; /* Altura máxima para o canvas dentro do wrapper */
+}
+
+/* Modais */
+.modal {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #444444; /* Cinza médio para conteúdo do modal */
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #cccccc; /* Cinza claro */
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #ffffff; /* Branco */
+}
+
+.modal h3 {
+    color: #e67e22; /* Laranja */
+    margin-top: 0;
+}
+
+/* Classes Utilitárias */
+.hidden {
+    display: none !important;
+}
+
+.message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    position: relative; /* Para posicionar o botão de fechar */
+}
+
+.message.error {
+    background-color: #c0392b;
+    color: white;
+}
+
+.message.success {
+    background-color: #27ae60;
+    color: white;
+}
+
+/* Botão de fechar para mensagens */
+.message-close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.message-close-btn:hover {
+    opacity: 1;
+}
+
+/* Estilos da página de Login (já definidos, mas para manter consistência) */
+.login-container {
+    background-color: #444444; /* Cinza médio */
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h2 {
+    color: #e67e22; /* Laranja */
+    margin-bottom: 25px;
+    font-size: 2em;
+}
+
+.login-container .input-group label {
+    color: #cccccc; /* Cinza claro */
+}
+
+.login-container .input-group input {
+    background-color: #555555; /* Cinza escuro */
+    color: #ffffff; /* Branco */
+    border: 1px solid #666666; /* Cinza */
+}
+
+/* Rodapé */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    background: #222222; /* Preto */
+    color: #aaaaaa; /* Cinza claro */
+    margin-top: 30px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    header h1 {
+        float: none;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    header nav {
+        float: none;
+        text-align: center;
+        flex-direction: column;
+    }
+    header nav ul {
+        margin: 10px 0;
+    }
+    header nav ul li {
+        display: block;
+        padding: 8px 0;
+    }
+    #logoutButton {
+        margin-top: 10px;
+    }
+    .summary-cards {
+        flex-direction: column;
+    }
+    .form-row {
+        flex-direction: column;
+    }
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .charts-container {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 95%;
+        padding: 0 10px;
+    }
+    section {
+        padding: 15px;
+    }
+    .login-container {
+        padding: 20px;
+        margin: 15px;
+    }
+    .login-container h2 {
+        font-size: 1.8em;
+    }
+    .modal-content {
+        padding: 20px;
+    }
+}

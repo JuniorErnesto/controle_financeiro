@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - Controle Financeiro</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Incluir biblioteca de gráficos, por exemplo, Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Controle Financeiro</h1>
+            <nav>
+                <ul id="nav-links">
+                    <li><a href="#" id="dashboard-link" class="active">Painel</a></li>
+                    <li><a href="#" id="history-link">Histórico</a></li>
+                    <li><a href="#" id="reports-link">Relatórios</a></li>
+                    <li><a href="order_dashboard.html">Ordens</a></li>
+                    <!-- O link de Gerenciar Usuários será adicionado dinamicamente se for admin -->
+                </ul>
+                <div>
+                    <span id="usernameDisplay"></span>
+                    <button id="logoutButton">Sair</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Seção do Painel (Dashboard) -->
+        <section id="dashboard-section">
+            <h2>Resumo Financeiro</h2>
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Receitas</h3>
+                    <p id="totalReceitas">R$ 0,00</p>
+                </div>
+                <div class="card">
+                    <h3>Despesas</h3>
+                    <p id="totalDespesas">R$ 0,00</p>
+                </div>
+                <div class="card saldo">
+                    <h3>Saldo Atual</h3>
+                    <p id="saldoAtual">R$ 0,00</p>
+                </div>
+            </div>
+
+            <h2>Adicionar Nova Transação</h2>
+            <form id="addTransactionForm">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="description">Descrição</label>
+                        <input type="text" id="description" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="amount">Valor (R$)</label>
+                        <input type="number" id="amount" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="type">Tipo</label>
+                        <select id="type" required>
+                            <option value="receita">Receita</option>
+                            <option value="despesa">Despesa</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="category">Categoria</label>
+                        <input type="text" id="category">
+                    </div>
+                     <div class="input-group">
+                        <label for="date">Data</label>
+                        <input type="date" id="date" required>
+                    </div>
+                </div>
+                <button type="submit">Adicionar Transação</button>
+                <p id="transactionMessage" class="message"></p>
+            </form>
+
+            <h2>Transações Recentes</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Tipo</th>
+                            <th>Valor (R$)</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTransactionsTableBody">
+                        <!-- Linhas da tabela serão inseridas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção de Histórico -->
+        <section id="history-section" class="hidden">
+            <h2>Histórico de Transações</h2>
+            <div class="filters">
+                <div class="input-group">
+                    <label for="filterPeriod">Período:</label>
+                    <select id="filterPeriod">
+                        <option value="all">Todos</option>
+                        <option value="day">Hoje</option>
+                        <option value="week">Esta Semana</option>
+                        <option value="month">Este Mês</option>
+                        <option value="year">Este Ano</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                <div id="customDateFilters" class="form-row hidden">
+                    <div class="input-group">
+                        <label for="startDate">Data Inicial:</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="input-group">
+                        <label for="endDate">Data Final:</label>
+                        <input type="date" id="endDate">
+                    </div>
+                </div>
+                <button id="applyFilterButton">Aplicar Filtro</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Descrição</th>
+                            <th>Categoria</th>
+                            <th>Tipo</th>
+                            <th>Valor (R$)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTransactionsTableBody">
+                        <!-- Linhas da tabela de histórico -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="charts-container">
+                <div class="chart-wrapper">
+                    <h3>Despesas por Categoria (Gráfico de Torta)</h3>
+                    <canvas id="expensePieChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <h3>Evolução Financeira (Gráfico de Linha)</h3>
+                    <canvas id="financialLineChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Relatórios -->
+        <section id="reports-section" class="hidden">
+            <h2>Gerar Relatório</h2>
+            <p>Selecione o período para o relatório:</p>
+            <div class="filters">
+                <div class="input-group">
+                    <label for="reportPeriod">Período:</label>
+                    <select id="reportPeriod">
+                        <option value="all">Todos</option>
+                        <option value="day">Hoje</option>
+                        <option value="week">Esta Semana</option>
+                        <option value="month">Este Mês</option>
+                        <option value="year">Este Ano</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                <div id="customReportDateFilters" class="form-row hidden">
+                    <div class="input-group">
+                        <label for="reportStartDate">Data Inicial:</label>
+                        <input type="date" id="reportStartDate">
+                    </div>
+                    <div class="input-group">
+                        <label for="reportEndDate">Data Final:</label>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                </div>
+                <button id="generatePdfButton">Gerar PDF</button>
+                <button id="generateExcelButton">Gerar Excel (XLSX)</button> <!-- Botão Adicionado -->
+            </div>
+        </section>
+        
+        <!-- Seção de Gerenciamento de Usuários (Admin) -->
+        <section id="user-management-section" class="hidden">
+            <h2>Gerenciar Usuários</h2>
+            <button id="showAddUserModalButton">Adicionar Novo Usuário</button>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Linhas da tabela de usuários -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal para Adicionar/Editar Usuário (Admin) -->
+    <div id="userModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeUserModalButton">&times;</span>
+            <h3 id="userModalTitle">Adicionar Usuário</h3>
+            <form id="userForm">
+                <input type="hidden" id="userId">
+                <div class="input-group">
+                    <label for="modalUsername">Usuário:</label>
+                    <input type="text" id="modalUsername" required>
+                </div>
+                <div class="input-group">
+                    <label for="modalEmail">Email:</label>
+                    <input type="email" id="modalEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="modalPassword">Senha (deixe em branco para não alterar):</label>
+                    <input type="password" id="modalPassword">
+                </div>
+                <div class="input-group">
+                    <label for="modalRole">Perfil:</label>
+                    <select id="modalRole">
+                        <option value="funcionario">Funcionário</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" id="saveUserButton">Salvar</button>
+                <p id="userFormMessage" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Transação -->
+    <div id="editTransactionModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeEditTransactionModalButton">&times;</span>
+            <h3>Editar Transação</h3>
+            <form id="editTransactionFormModal">
+                <input type="hidden" id="editTransactionId">
+                <div class="input-group">
+                    <label for="editDescription">Descrição:</label>
+                    <input type="text" id="editDescription" required>
+                </div>
+                <div class="input-group">
+                    <label for="editAmount">Valor (R$):</label>
+                    <input type="number" id="editAmount" step="0.01" required>
+                </div>
+                <div class="input-group">
+                    <label for="editType">Tipo:</label>
+                    <select id="editType" required>
+                        <option value="receita">Receita</option>
+                        <option value="despesa">Despesa</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="editCategory">Categoria:</label>
+                    <input type="text" id="editCategory">
+                </div>
+                <div class="input-group">
+                    <label for="editDate">Data:</label>
+                    <input type="date" id="editDate" required>
+                </div>
+                <button type="submit">Salvar Alterações</button>
+                <p id="editTransactionMessageModal" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Foco-X | Controle Financeiro</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

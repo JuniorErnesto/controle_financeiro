@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Ordens - Controle Financeiro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="order_style.css">
+    <!-- Incluir biblioteca de gráficos, por exemplo, Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Controle Financeiro</h1>
+            <nav>
+                <ul id="nav-links">
+                    <li><a href="dashboard.html">Financeiro</a></li>
+                    <li><a href="order_dashboard.html" class="active">Ordens</a></li>
+                    <li><a href="#" id="customers-link">Clientes</a></li>
+                    <li><a href="#" id="reports-link">Relatórios</a></li>
+                    <!-- O link de Gerenciar Usuários será adicionado dinamicamente se for admin -->
+                </ul>
+                <div>
+                    <span id="usernameDisplay"></span>
+                    <button id="logoutButton">Sair</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Seção do Dashboard de Ordens -->
+        <section id="order-dashboard-section">
+            <div class="dashboard-header">
+                <h2>Dashboard de Ordens</h2>
+                <button id="newOrderButton" class="primary-button">Nova Ordem</button>
+            </div>
+
+            <div class="status-cards">
+                <div class="status-card" data-status="quote">
+                    <h3>Orçamentos</h3>
+                    <p class="count">0</p>
+                </div>
+                <div class="status-card" data-status="approved">
+                    <h3>Aprovadas</h3>
+                    <p class="count">0</p>
+                </div>
+                <div class="status-card" data-status="in_progress">
+                    <h3>Em Andamento</h3>
+                    <p class="count">0</p>
+                </div>
+                <div class="status-card" data-status="completed">
+                    <h3>Concluídas</h3>
+                    <p class="count">0</p>
+                </div>
+                <div class="status-card" data-status="warranty">
+                    <h3>Garantia</h3>
+                    <p class="count">0</p>
+                </div>
+            </div>
+
+            <div class="filter-section">
+                <h3>Filtros</h3>
+                <div class="filters">
+                    <div class="input-group">
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter">
+                            <option value="all">Todos</option>
+                            <option value="quote">Orçamento</option>
+                            <option value="approved">Aprovada</option>
+                            <option value="in_progress">Em Andamento</option>
+                            <option value="completed">Concluída</option>
+                            <option value="returned">Devolvida</option>
+                            <option value="warranty">Garantia</option>
+                            <option value="closed">Fechada</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="customerFilter">Cliente:</label>
+                        <select id="customerFilter">
+                            <option value="all">Todos</option>
+                            <!-- Opções serão preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="dateRangeFilter">Período:</label>
+                        <select id="dateRangeFilter">
+                            <option value="all">Todos</option>
+                            <option value="today">Hoje</option>
+                            <option value="week">Esta Semana</option>
+                            <option value="month">Este Mês</option>
+                            <option value="custom">Personalizado</option>
+                        </select>
+                    </div>
+                    <div id="customDateRange" class="hidden">
+                        <div class="input-group">
+                            <label for="startDate">De:</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="input-group">
+                            <label for="endDate">Até:</label>
+                            <input type="date" id="endDate">
+                        </div>
+                    </div>
+                    <button id="applyFiltersButton" class="secondary-button">Aplicar Filtros</button>
+                </div>
+            </div>
+
+            <h3>Ordens</h3>
+            <div class="table-container">
+                <table id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Cliente</th>
+                            <th>Equipamento</th>
+                            <th>Status</th>
+                            <th>Criada em</th>
+                            <th>Dias</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Linhas da tabela serão inseridas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção de Clientes -->
+        <section id="customers-section" class="hidden">
+            <div class="section-header">
+                <h2>Gestão de Clientes</h2>
+                <button id="newCustomerButton" class="primary-button">Novo Cliente</button>
+            </div>
+
+            <div class="search-container">
+                <div class="input-group">
+                    <label for="customerSearch">Buscar Cliente:</label>
+                    <input type="text" id="customerSearch" placeholder="Nome, email ou telefone">
+                </div>
+                <button id="searchCustomerButton" class="secondary-button">Buscar</button>
+            </div>
+
+            <div class="table-container">
+                <table id="customersTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Ordens</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                        <!-- Linhas da tabela serão inseridas aqui -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Seção de Relatórios -->
+        <section id="reports-section" class="hidden">
+            <h2>Relatórios e Análises</h2>
+            
+            <div class="filters">
+                <div class="input-group">
+                    <label for="reportPeriod">Período:</label>
+                    <select id="reportPeriod">
+                        <option value="month">Este Mês</option>
+                        <option value="quarter">Este Trimestre</option>
+                        <option value="year">Este Ano</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                <div id="customReportDates" class="hidden">
+                    <div class="input-group">
+                        <label for="reportStartDate">De:</label>
+                        <input type="date" id="reportStartDate">
+                    </div>
+                    <div class="input-group">
+                        <label for="reportEndDate">Até:</label>
+                        <input type="date" id="reportEndDate">
+                    </div>
+                </div>
+                <button id="generateReportButton" class="primary-button">Gerar Relatório</button>
+            </div>
+
+            <div class="reports-container">
+                <div class="report-section">
+                    <h3>Desempenho de Ordens</h3>
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <h4>Volume de Ordens</h4>
+                            <canvas id="ordersVolumeChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h4>Tempo Médio de Conclusão</h4>
+                            <canvas id="completionTimeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>Análise Financeira</h3>
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <h4>Distribuição de Despesas</h4>
+                            <canvas id="expensesDistributionChart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <h4>Margem de Lucro</h4>
+                            <canvas id="profitMarginChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3>Top Ordens</h3>
+                    <div class="table-container">
+                        <table id="topOrdersTable">
+                            <thead>
+                                <tr>
+                                    <th>Número</th>
+                                    <th>Cliente</th>
+                                    <th>Valor</th>
+                                    <th>Custo</th>
+                                    <th>Lucro</th>
+                                    <th>Margem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topOrdersTableBody">
+                                <!-- Linhas da tabela serão inseridas aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Novo/Editar Cliente -->
+    <div id="customerModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeCustomerModalButton">&times;</span>
+            <h3 id="customerModalTitle">Novo Cliente</h3>
+            <form id="customerForm">
+                <input type="hidden" id="customerId">
+                <div class="input-group">
+                    <label for="customerName">Nome:</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="input-group">
+                    <label for="customerEmail">Email:</label>
+                    <input type="email" id="customerEmail" required>
+                </div>
+                <div class="input-group">
+                    <label for="customerPhone">Telefone:</label>
+                    <input type="text" id="customerPhone">
+                </div>
+                <div class="input-group">
+                    <label for="customerAddress">Endereço:</label>
+                    <textarea id="customerAddress" rows="3"></textarea>
+                </div>
+                <button type="submit" class="primary-button">Salvar</button>
+                <p id="customerFormMessage" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para Nova Ordem -->
+    <div id="orderModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeOrderModalButton">&times;</span>
+            <h3 id="orderModalTitle">Nova Ordem</h3>
+            <form id="orderForm">
+                <input type="hidden" id="orderId">
+                
+                <h4>Informações do Cliente</h4>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="orderCustomer">Cliente:</label>
+                        <select id="orderCustomer" required>
+                            <option value="">Selecione um cliente</option>
+                            <!-- Opções serão preenchidas dinamicamente -->
+                        </select>
+                    </div>
+                    <button type="button" id="newCustomerFromOrderButton" class="secondary-button">Novo Cliente</button>
+                </div>
+
+                <h4>Informações do Equipamento</h4>
+                <div class="input-group">
+                    <label for="orderEquipment">Equipamento:</label>
+                    <input type="text" id="orderEquipment" required>
+                </div>
+                <div class="input-group">
+                    <label for="orderProblemDescription">Descrição do Problema:</label>
+                    <textarea id="orderProblemDescription" rows="3"></textarea>
+                </div>
+
+                <h4>Orçamento</h4>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="orderLaborCost">Custo de Mão de Obra (R$):</label>
+                        <input type="number" id="orderLaborCost" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="orderPartsCost">Custo de Peças (R$):</label>
+                        <input type="number" id="orderPartsCost" step="0.01" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="orderThirdPartyCost">Custo de Serviços Terceirizados (R$):</label>
+                        <input type="number" id="orderThirdPartyCost" step="0.01" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label for="orderEstimatedDays">Tempo Estimado (dias):</label>
+                        <input type="number" id="orderEstimatedDays" min="1" value="1">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="orderTotalAmount">Valor Total do Orçamento (R$):</label>
+                    <input type="number" id="orderTotalAmount" step="0.01" min="0" readonly>
+                </div>
+                <div class="input-group">
+                    <label for="orderNotes">Observações:</label>
+                    <textarea id="orderNotes" rows="3"></textarea>
+                </div>
+
+                <div class="form-buttons">
+                    <button type="submit" class="primary-button">Salvar Ordem</button>
+                    <button type="button" id="cancelOrderButton" class="secondary-button">Cancelar</button>
+                </div>
+                <p id="orderFormMessage" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes da Ordem -->
+    <div id="orderDetailsModal" class="modal hidden">
+        <div class="modal-content order-details-modal">
+            <span class="close-button" id="closeOrderDetailsModalButton">&times;</span>
+            <h3>Detalhes da Ordem <span id="orderNumberDisplay"></span></h3>
+            
+            <div class="order-details-container">
+                <div class="order-info-section">
+                    <h4>Informações Gerais</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Cliente:</span>
+                            <span id="detailsCustomerName"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Equipamento:</span>
+                            <span id="detailsEquipment"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Status:</span>
+                            <span id="detailsStatus"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Criada em:</span>
+                            <span id="detailsCreatedAt"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Dias em andamento:</span>
+                            <span id="detailsDaysRunning"></span>
+                        </div>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="label">Descrição do Problema:</span>
+                        <p id="detailsProblemDescription"></p>
+                    </div>
+                </div>
+
+                <div class="order-status-section">
+                    <h4>Status da Ordem</h4>
+                    <div class="status-timeline" id="statusTimeline">
+                        <!-- Timeline será gerada dinamicamente -->
+                    </div>
+                    <div class="status-actions">
+                        <h5>Atualizar Status</h5>
+                        <div class="status-buttons" id="statusButtons">
+                            <!-- Botões serão gerados dinamicamente com base no status atual -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-quote-section">
+                    <h4>Orçamento</h4>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Mão de Obra:</span>
+                            <span id="detailsLaborCost"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Peças:</span>
+                            <span id="detailsPartsCost"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Serviços Terceirizados:</span>
+                            <span id="detailsThirdPartyCost"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Tempo Estimado:</span>
+                            <span id="detailsEstimatedDays"></span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Total do Orçamento:</span>
+                            <span id="detailsTotalAmount" class="highlight"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-expenses-section">
+                    <div class="section-header">
+                        <h4>Despesas</h4>
+                        <button id="addExpenseButton" class="primary-button">Adicionar Despesa</button>
+                    </div>
+                    <div class="expenses-summary">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="label">Total Mão de Obra:</span>
+                                <span id="expensesLaborTotal"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Total Peças:</span>
+                                <span id="expensesPartsTotal"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Total Serviços Terceirizados:</span>
+                                <span id="expensesThirdPartyTotal"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Total Despesas:</span>
+                                <span id="expensesTotalAmount" class="highlight"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="label">Despesas de Garantia:</span>
+                                <span id="expensesWarrantyTotal"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="expensesTable">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Categoria</th>
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                    <th>Garantia</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expensesTableBody">
+                                <!-- Linhas da tabela serão inseridas aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="order-metrics-section">
+                    <h4>Métricas</h4>
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <span class="label">Orçamento vs. Despesas:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="budgetVsExpensesBar"></div>
+                                <span id="budgetVsExpensesText"></span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <span class="label">Tempo Estimado vs. Real:</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="timeProgressBar"></div>
+                                <span id="timeProgressText"></span>
+                            </div>
+                        </div>
+                        <div class="metric-item">
+                            <span class="label">Margem de Lucro:</span>
+                            <span id="profitMargin" class="highlight"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-actions">
+                    <button id="editOrderButton" class="secondary-button">Editar Ordem</button>
+                    <button id="generateOrderReportButton" class="secondary-button">Gerar Relatório</button>
+                    <button id="closeOrderDetailsButton" class="primary-button">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Despesa -->
+    <div id="expenseModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button" id="closeExpenseModalButton">&times;</span>
+            <h3 id="expenseModalTitle">Adicionar Despesa</h3>
+            <form id="expenseForm">
+                <input type="hidden" id="expenseId">
+                <input type="hidden" id="expenseOrderId">
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="expenseCategory">Categoria:</label>
+                        <select id="expenseCategory" required>
+                            <option value="parts">Peças</option>
+                            <option value="labor">Mão de Obra</option>
+                            <option value="third_party">Serviços Terceirizados</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="expenseDate">Data:</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="expenseDescription">Descrição:</label>
+                    <input type="text" id="expenseDescription" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="expenseAmount">Valor (R$):</label>
+                        <input type="number" id="expenseAmount" step="0.01" min="0" required>
+                    </div>
+                    <div class="input-group checkbox-group">
+                        <label for="expenseIsWarranty">
+                            <input type="checkbox" id="expenseIsWarranty">
+                            Despesa de Garantia
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="primary-button">Salvar Despesa</button>
+                <p id="expenseFormMessage" class="message"></p>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Foco-X - Controle Financeiro</p>
+        </div>
+    </footer>
+
+    <script src="order_script.js"></script>
+</body>
+</html>
